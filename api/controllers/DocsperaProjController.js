@@ -13,5 +13,21 @@ exports.listAllMedicareProviders = function(request, response){
 	console.log(result.rows);
 	response.send(result);
   });
-  
+};
+
+
+exports.listAvgCost = function(request, response){
+    service.getAvgCost(function(result){
+	console.log('result in controller is : ')
+	console.log(result.rows);
+	response.send(result);
+});
+};
+
+exports.listPercDiabetic = function(request, response){
+    service.getAvgCost(function(result){
+	console.log('result in controller is : ')
+	console.log(result.rows);
+	response.send(result);
+});
 };

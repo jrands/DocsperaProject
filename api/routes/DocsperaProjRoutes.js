@@ -7,4 +7,10 @@ module.exports = function(app) {
 	
   app.route('/getAllMedicareProviders')
     .get(docsperaController.listAllMedicareProviders);
+	
+  app.route('/getAverageCostByState')
+	.get(docsperaController.listAvgCost);
+	
+  app.route('/getPercentDiabeticByState')
+	.get(docsperaController.listPercDiabetic);
 };
