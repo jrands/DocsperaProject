@@ -1,4 +1,5 @@
 const util = require('../util/DocsperaProjUtil');
+const sql = require('../businessrules/DocsperaProjRules');
 
 function getAllZipCodes(callback){
 	console.log('running service method...');
@@ -9,8 +10,19 @@ function getAllZipCodes(callback){
 	console.log('done');
 	callback(res);
     console.log('query run successful');
-    util.client.end();
 });
 }
 
-module.exports = {getAllZipCodes};
+function getProvidersByState(callback){
+	var queryStr = sql.PROVIDER_COUNT_BY_STATE;
+	util.client.query(queryStr, (err, res) => {
+    if (err) {
+        console.error(err);
+    }
+	console.log('done');
+	callback(res);
+    console.log('query run successful');
+});
+}
+
+module.exports = {getAllZipCodes, getProvidersByState};
