@@ -14,12 +14,3 @@ routes(app);
 app.listen(PORT, () => {
 	console.log("API Started on port " + PORT); 
 });
-
- // app.get("/personnel", (request, response) => {
-    // zipCodeCollection.find({}).toArray((error, result) => {
-        // if(error) {
-            // return response.status(500).send(error);
-        // }
-        // response.send(result);
-    // });
-// });
