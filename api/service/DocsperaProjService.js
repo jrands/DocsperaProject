@@ -37,6 +37,18 @@ function getAvgCost(callback){
 });
 }
 
+function getPercDiabetic(callback){
+	var queryStr = sql.PERC_DIABETIC_BY_STATE;
+	util.client.query(queryStr, (err, res) => {
+    if (err) {
+        console.error(err);
+    }
+	console.log('done');
+	callback(res);
+    console.log('query run successful');
+});
+}
 
 
-module.exports = {getAllZipCodes, getProvidersByState, getAvgCost};
+
+module.exports = {getAllZipCodes, getProvidersByState, getAvgCost, getPercDiabetic};

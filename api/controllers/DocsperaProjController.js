@@ -25,7 +25,7 @@ exports.listAvgCost = function(request, response){
 };
 
 exports.listPercDiabetic = function(request, response){
-    service.getAvgCost(function(result){
+    service.getPercDiabetic(function(result){
 	console.log('result in controller is : ')
 	console.log(result.rows);
 	response.send(result);

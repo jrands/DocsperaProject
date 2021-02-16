@@ -8,7 +8,6 @@ app.use(BodyParser.urlencoded({ extended: true }));
 
 var util = require('./api/util/DocsperaProjUtil');
 var routes = require('./api/routes/DocsperaProjRoutes');
-var model = require('./api/models/DocsperaProjModel');
 routes(app);
 
 app.listen(PORT, () => {
