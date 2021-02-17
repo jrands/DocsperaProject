@@ -17,9 +17,9 @@ This project uses a PostgreSQL Database hosted on Google Cloud SQL. Connection d
 This project serves three API GET endpoints built on the Node js platform. No authentication or headers are required. Data for the requested queries is available on the following uris in a JSON response format:
 
 ```
-https://docspera.loca.lt/getAllMedicareProviders
-https://docspera.loca.lt/getAverageCostByState
-https://docspera.loca.lt/getPercentDiabeticByState
+https://serious-dodo-39.loca.lt/getAllMedicareProviders
+https://serious-dodo-39.loca.lt/getAverageCostByState
+https://serious-dodo-39.loca.lt/getPercentDiabeticByState
 ```
 
 If you would like to configure and run the APIs yourself, clone the repository and run the following commands in the main directory (requires node js): 

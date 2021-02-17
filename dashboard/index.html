@@ -119,6 +119,7 @@
 <script>
 		var datapoint;
 		var unformattedDatapoint;
+		var url = 'https://serious-dodo-39.loca.lt'
 		function setDatapoint(n){
 			datapoint = n;
 		}
@@ -139,7 +140,7 @@
 		}
 		
 		function updateMapForMedicareProviders(){
-			axios.get('https://docspera.loca.lt/getAllMedicareProviders').then(resp => {
+			axios.get(url + '/getAllMedicareProviders').then(resp => {
 				var rows = resp.data.rows;
 				var states ={};
 				["HI", "AK", "FL", "SC", "GA", "AL", "NC", "TN", "RI", "CT", "MA",
@@ -163,7 +164,7 @@
 		}
 		
 		function updateMapForAvgCost(){
-			axios.get('https://docspera.loca.lt/getAverageCostByState').then(resp => {
+			axios.get(url + '/getAverageCostByState').then(resp => {
 				var rows = resp.data.rows;
 				var states ={};
 				["HI", "AK", "FL", "SC", "GA", "AL", "NC", "TN", "RI", "CT", "MA",
@@ -187,7 +188,7 @@
 		}
 		
 		function updateMapForPercentDiabetic(){
-			axios.get('https://docspera.loca.lt/getPercentDiabeticByState').then(resp => {
+			axios.get(url + '/getPercentDiabeticByState').then(resp => {
 				var rows = resp.data.rows;
 				var states ={};
 				["HI", "AK", "FL", "SC", "GA", "AL", "NC", "TN", "RI", "CT", "MA",
