@@ -34,4 +34,10 @@ The server should start on port 3000.
 
 
 ## Dashboard
-Dashboard was built using javascript with the D3 library. 
+Dashboard was built using javascript with the D3 library. Can be accessed at the following url: 
+
+```
+http://5ed27edb65b6.ngrok.io/
+```
+
+You can also use the http-server package from node to run the dashboard locally, or simply open the index.html file in a browser. 
