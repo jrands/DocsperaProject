@@ -1,0 +1,37 @@
+# Docspera Take Home Project
+## By John Randis 
+
+## Datastore
+
+This project uses a PostgreSQL Database hosted on Google Cloud SQL. Connection details are as follows: 
+```
+    user: 'postgres',
+    host: '35.223.209.198',
+    database: 'DOCSPERA_PROJ',
+	password: 'MN3BE24kul356GBB',
+    port: 5432,
+```
+
+## APIs
+
+This project serves three API GET endpoints built on the Node js platform. No authentication or headers are required. Data for the requested queries is available on the following uris in a JSON response format:
+
+```
+https://docspera.loca.lt/getAllMedicareProviders
+https://docspera.loca.lt/getAverageCostByState
+https://docspera.loca.lt/getPercentDiabeticByState
+```
+
+If you would like to configure and run the APIs yourself, clone the repository and run the following commands in the main directory (requires node js): 
+
+```bash
+npm install
+
+npm run start
+```
+
+The server should start on port 3000. 
+
+
+## Dashboard
+Dashboard was built using javascript with the D3 library. 

@@ -1,29 +1,223 @@
 <!DOCTYPE html>
-<!--[if gt IE 8]><!--> <html lang="en" ng-app="myApp" class="no-js"> <!--<![endif]-->
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Docspera</title>
-  <meta name="description" content="">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="lib/html5-boilerplate/dist/css/normalize.css">
-  <link rel="stylesheet" href="lib/html5-boilerplate/dist/css/main.css">
-  <link rel="stylesheet" href="app.css">
-  <script src="lib/html5-boilerplate/dist/js/vendor/modernizr-2.8.3.min.js"></script>
+
 </head>
-<body>
+<meta charset="utf-8">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
+  <style>
+    .navbar {
+      margin-bottom: 0;
+      border-radius: 0;
+    }
+    
+    .row.content {height: 450px}
+    
+    .sidenav {
+      padding-top: 20px;
+      height: 100%;
+    }
+    
+    footer {
+      background-color: #555;
+      color: white;
+      padding: 15px;
+    }
+    
+    @media screen and (max-width: 767px) {
+      .sidenav {
+        height: auto;
+        padding: 15px;
+      }
+      .row.content {height:auto;} 
+    }
+	
+	path:hover {
+    fill-opacity: .7;
+}
 
-  <div ng-view></div>
+	.state{
+		fill: none;
+		stroke: #a9a9a9;
+		stroke-width: 1;
+	}
+	.state:hover{
+		fill-opacity:0.5;
+	}
+	#tooltip h4{
+		margin:0;
+		font-size:14px;
+	}
+	#tooltip{
+		display:block;
+		position:fixed;
+		overflow:hidden;		
+		text-align: center;
+		background:rgba(0,0,0,0.9);
+		border:1px solid grey;
+		border-radius:5px;
+		font-size:12px;
+		width:auto;
+		color:white;
+		opacity:0;
+		pointer-events: none;      
+	}
+	#tooltip table{
+		table-layout:fixed;
+	}
+	#tooltip tr td{
+		padding:0;
+		margin:0;
+	}
+	#tooltip tr td:nth-child(2){
+		text-align:center;
+	}
+	
+	.header {
+  padding: 30px;
+  text-align: center;
+  font-size: 30px;
+}
+
+  </style>
+
+<script src='https://d3js.org/d3.v4.min.js'></script>
+<script src='uStates.js'></script>
+<nav>
+  <div class="container-fluid">
+    <div class="navbar-header">
+	  <img src = 'header.jpg' height = 50px ></img>
+    </div>
+	<div class = 'header'>
+	<h1>Docspera Project Dashboard</h1>
+	<h2 id = "subHeader">Healthcare Providers By State</h2>
+	</div>
+  </div>
+</nav>
   
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
-  <script src="lib/angular-route/angular-route.js"></script>
-  <script src="app.js"></script>
-</body>
-
-<div ng-app = "">
-   <p>Enter your Name: <input type = "text" ng-model = "name"></p>
-<p>Hello <span ng-bind = "name"></span>!</p>
-
+<div class="container-fluid text-center">    
+  <div class="row content">
+    <div class="col-sm-2 sidenav">
+	<h4>Select Query to Display</h4>
+      <p><a href="#" onclick="updateHeaderProviders()">Healthcare Providers By State</a></p>
+      <p><a href="#" onclick="updateHeaderCosts()">Healthcare Costs By State</a></p>
+      <p><a href="#" onclick="updateHeaderDiabetes()">Diabetes By State</a></p>
+    </div>
+    <div class="col-sm-8 text-left" id='svgparent'>
+      <h1></h1>
+	  	<div title="regular tooltip" id="tooltip"></div> 
+		<svg width="960" height="600" id="statesvg"></svg>
+      <hr>
+    </div>
+  </div>
 </div>
 
+
+<script>
+		var datapoint;
+		var unformattedDatapoint;
+		function setDatapoint(n){
+			datapoint = n;
+		}
+		
+		function updateHeaderProviders(){
+			 document.getElementById('subHeader').innerHTML = 'Individual Healthcare Providers By State';
+			 updateMapForMedicareProviders();
+		}
+		
+		function updateHeaderCosts(){
+			 document.getElementById('subHeader').innerHTML = 'Average Healthcare Costs By State';
+			 updateMapForAvgCost();
+		}
+		
+		function updateHeaderDiabetes(){
+			 document.getElementById('subHeader').innerHTML = 'Percentage of Diabetes Patients By State';
+			 updateMapForPercentDiabetic();
+		}
+		
+		function updateMapForMedicareProviders(){
+			axios.get('https://docspera.loca.lt/getAllMedicareProviders').then(resp => {
+				var rows = resp.data.rows;
+				var states ={};
+				["HI", "AK", "FL", "SC", "GA", "AL", "NC", "TN", "RI", "CT", "MA",
+				"ME", "NH", "VT", "NY", "NJ", "PA", "DE", "MD", "WV", "KY", "OH", 
+				"MI", "WY", "MT", "ID", "WA", "DC", "TX", "CA", "AZ", "NV", "UT", 
+				"CO", "NM", "OR", "ND", "SD", "NE", "IA", "MS", "IN", "IL", "MN", 
+				"WI", "MO", "AR", "OK", "KS", "LA", "VA"]
+				.forEach(function(d){
+					rows.forEach(function(i){
+						if(i.state == d){
+							setDatapoint(i.count);
+							console.log(i.state + ': ' + datapoint);
+						}
+					});
+					states[d]={datapoint:d3.min([datapoint]), color:d3.interpolate("#ffffcc", "#800026")(datapoint/100
+					)}; 
+				});
+				uStates.draw("#statesvg", states, tooltipHtml);
+			});
+			d3.select(self.frameElement).style("height", "600px"); 
+		}
+		
+		function updateMapForAvgCost(){
+			axios.get('https://docspera.loca.lt/getAverageCostByState').then(resp => {
+				var rows = resp.data.rows;
+				var states ={};
+				["HI", "AK", "FL", "SC", "GA", "AL", "NC", "TN", "RI", "CT", "MA",
+				"ME", "NH", "VT", "NY", "NJ", "PA", "DE", "MD", "WV", "KY", "OH", 
+				"MI", "WY", "MT", "ID", "WA", "DC", "TX", "CA", "AZ", "NV", "UT", 
+				"CO", "NM", "OR", "ND", "SD", "NE", "IA", "MS", "IN", "IL", "MN", 
+				"WI", "MO", "AR", "OK", "KS", "LA", "VA"]
+				.forEach(function(d){
+					rows.forEach(function(i){
+						if(i.state == d){
+							setDatapoint('$' + i.average_cost);
+							unformattedDatapoint = i.average_cost;
+						}
+					});
+					states[d]={datapoint:d3.min([datapoint]), color:d3.interpolate("#ffffcc", "#800026")(unformattedDatapoint/100000
+					)}; 
+				});
+				uStates.draw("#statesvg", states, tooltipHtml);
+			});
+			d3.select(self.frameElement).style("height", "600px"); 
+		}
+		
+		function updateMapForPercentDiabetic(){
+			axios.get('https://docspera.loca.lt/getPercentDiabeticByState').then(resp => {
+				var rows = resp.data.rows;
+				var states ={};
+				["HI", "AK", "FL", "SC", "GA", "AL", "NC", "TN", "RI", "CT", "MA",
+				"ME", "NH", "VT", "NY", "NJ", "PA", "DE", "MD", "WV", "KY", "OH", 
+				"MI", "WY", "MT", "ID", "WA", "DC", "TX", "CA", "AZ", "NV", "UT", 
+				"CO", "NM", "OR", "ND", "SD", "NE", "IA", "MS", "IN", "IL", "MN", 
+				"WI", "MO", "AR", "OK", "KS", "LA", "VA"]
+				.forEach(function(d){
+					rows.forEach(function(i){
+						if(i.state == d){
+							setDatapoint(i.percent_diabetic + '%');
+							unformattedDatapoint = i.percent_diabetic;
+						}
+					});
+					states[d]={datapoint:d3.min([datapoint]), color:d3.interpolate("#ffffcc", "#800026")(unformattedDatapoint/50)}; 
+				});
+				uStates.draw("#statesvg", states, tooltipHtml);
+			});
+			d3.select(self.frameElement).style("height", "600px"); 
+		}
+		
+
+	function tooltipHtml(n, d){
+		return "<h4>"+n+"</h4><table>"+
+			"<tr><td></td><td>"+(d.datapoint)+"</td></tr>"+
+			"</table>";
+	}
+	
+	updateMapForMedicareProviders();
+
+</script>
+</body>
 </html>
